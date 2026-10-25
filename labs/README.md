@@ -12,9 +12,9 @@ Every lab has the same parts:
 
 Three kinds:
 - **Tracks A and C (most):** a broken system. Find the cause, fix it, prove it.
-- **Track B (labs 20–24):** nothing is broken yet. Build the thing from a skeleton,
+- **Track B (labs 20–24, 38–39) and C1 batching (41):** nothing is broken yet. Build the thing from a skeleton,
   and `check.sh` injects the failure: races, crashes, pauses, overload.
-- **Track D (labs 30–34):** cloud scenarios run against local emulators (MinIO for
+- **Track D (labs 30–34, 43–44):** cloud scenarios run against local emulators (MinIO for
   S3, moto for SQS/SSM/EC2/Secrets Manager). Same API calls as real AWS, no
   account. Each README says what the emulator can't prove.
 
@@ -57,3 +57,13 @@ Lines on the checklist with no lab yet show as "not built yet" on the site.
 | 32 | [SQS Message Flood Unprocessed, Causes Latency](32-sqs-poison-message/) | Docker, moto (local AWS) | ready |
 | 33 | [Zombie Resources Driving Up Cloud Bill](33-zombie-resources/) | Docker, moto (local AWS) | ready |
 | 34 | [Secrets Manager Rotation Fails Silently](34-secrets-rotation/) | Docker, moto (local AWS) | ready |
+| 35 | [Overprivileged Service Accounts in K8s](35-overprivileged-sa/) | Docker, kind, kubectl | ready |
+| 36 | [Expired TLS Cert Brings Down Frontend](36-expired-tls-cert/) | Docker Compose, openssl | ready |
+| 37 | [Drift in IaC Deployments](37-iac-drift/) | Docker, Terraform (in a container), moto | ready |
+| 38 | [Build a Mini HTTP Server](38-mini-http-server/) | Python, sockets (build) | ready |
+| 39 | [Network Partition Simulation](39-network-partition/) | Python (build) | ready |
+| 40 | [Transaction Isolation Levels Simulation](40-isolation-levels/) | Docker Compose, Postgres | ready |
+| 41 | [Batching](41-dynamic-batching/) | Python (build) | ready |
+| 42 | [Model Speed vs Accuracy](42-speed-vs-accuracy/) | Python (design) | ready |
+| 43 | [API Gateway Key Rotation Breaks Clients](43-api-key-rotation/) | Docker, moto (local AWS) | ready |
+| 44 | [Security Group Too Permissive for Jumpbox](44-permissive-security-group/) | Docker, moto (local AWS) | ready |

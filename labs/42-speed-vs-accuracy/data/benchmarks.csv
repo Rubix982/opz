@@ -1,0 +1,11 @@
+variant,base_model,params,quantization,batch_size,p50_ms,p95_ms,accuracy,cost_per_1k_usd,notes
+large-fp32,large,7B,fp32,1,1400,2100,0.952,2.10,today's model
+large-int8,large,7B,int8,1,650,980,0.946,0.95,
+medium-fp16,medium,1.3B,fp16,1,260,420,0.931,0.42,
+medium-int8,medium,1.3B,int8,1,140,230,0.924,0.21,
+medium-int8-b8,medium,1.3B,int8,8,180,290,0.924,0.12,same weights as medium-int8 with dynamic batching (max 8)
+medium-int4,medium,1.3B,int4,1,95,160,0.901,0.14,
+small-fp32,small,350M,fp32,1,70,120,0.874,0.09,
+small-int8,small,350M,int8,1,40,70,0.861,0.05,
+distilled-small-int8,small (distilled from large),350M,int8,1,45,75,0.902,0.06,trained on the large model's answers
+router-small-large,small + large,350M + 7B,int8,1,60,1100,0.938,0.36,small model answers; ~15% of requests escalated to large-int8

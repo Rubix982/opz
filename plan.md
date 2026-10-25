@@ -11,6 +11,6 @@ write a short retro.
 
 ## Current Phase
 
-34 labs built across all four tracks (A 19, B 5, C 5, D 5), 4 solved (01–04).
+44 labs built, at least one in every section of all four tracks (A 22, B 8, C 7, D 7), 4 solved (01–04).
 Track D runs on local emulators, not a paid account. Next: solve the built ones,
 starting with 05 (OOMKilled) or 06 (webhook replay).

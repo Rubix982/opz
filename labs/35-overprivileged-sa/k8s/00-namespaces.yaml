@@ -1,0 +1,37 @@
+# Provided, not part of the bug: namespaces and the data that lives in them.
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: shop
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: billing
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: reporter-config
+  namespace: shop
+data:
+  report_interval: "3600"
+  recipients: "ops@opz.local"
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: payment-api-key
+  namespace: shop
+type: Opaque
+stringData:
+  api_key: pk_FAKE_lab35_payment_key_do_not_use
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: db-password
+  namespace: billing
+type: Opaque
+stringData:
+  password: pw_FAKE_lab35_billing_db_do_not_use

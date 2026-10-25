@@ -1,0 +1,25 @@
+name: opz-lab40
+
+services:
+  db:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_USER: clinic
+      POSTGRES_PASSWORD: clinic_FAKE_pw   # FAKE, lab only
+      POSTGRES_DB: clinic
+      # more connections than the default 100, for the concurrency tests
+    command: ["postgres", "-c", "max_connections=200"]
+    healthcheck:
+      test: ["CMD", "pg_isready", "-U", "clinic"]
+      interval: 1s
+      retries: 30
+
+  app:
+    build: app
+    ports:
+      - "127.0.0.1:${APP_PORT:-8040}:8040"
+    environment:
+      DATABASE_URL: postgresql://clinic:clinic_FAKE_pw@db:5432/clinic
+    depends_on:
+      db:
+        condition: service_healthy

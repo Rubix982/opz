@@ -1,0 +1,46 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: reporter
+  namespace: shop
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: reporter
+  template:
+    metadata:
+      labels:
+        app: reporter
+    spec:
+      serviceAccountName: reporter
+      containers:
+        - name: reporter
+          image: opz-lab35-app:1.0
+          imagePullPolicy: Never   # loaded into kind, not pulled
+          command: ["python", "reporter.py"]
+          ports:
+            - containerPort: 8080
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: web
+  namespace: shop
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: web
+  template:
+    metadata:
+      labels:
+        app: web
+    spec:
+      containers:
+        - name: web
+          image: opz-lab35-app:1.0
+          imagePullPolicy: Never
+          command: ["python", "web.py"]
+          ports:
+            - containerPort: 8080

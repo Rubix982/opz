@@ -13,7 +13,7 @@ Every scenario from `../devops_scenarios.md`, `../system_design_scenarios.md` an
 - no tag = **lab**: break → fix → `check.sh`, all local and free (like labs 01–04)
 - `[build]` = build it from scratch, then a test harness injects the failure
 - `[design]` = nothing to break; write a one-page decision (options, choice, trade-offs)
-- `[cloud]` = needs a real AWS/Azure account (costs money, so we'll check before starting)
+- `[cloud]` = a real AWS/Azure scenario; built labs run on local emulators (free), anything needing a real account is confirmed first
 - `[GPU]` = needs real GPU hardware; we simulate what we can locally
 
 **Merged:** where several original scenarios are the same exercise, they're one line,
@@ -214,7 +214,7 @@ Progress: **4 / 244** lines ticked.
   - **Also covers:** system design *Canary Rollout Failure Simulation*
 
 ### A5 · Kubernetes security
-- [ ] **Overprivileged Service Accounts in K8s** · kind, kubectl
+- [ ] **Overprivileged Service Accounts in K8s** · kind, kubectl → [lab 35](35-overprivileged-sa/)
   - **What happens:** An app pod runs under a service account that was bound to a broad role "to get things working". Someone who finds a bug in the app reads the token mounted at `/var/run/secrets/kubernetes.io/serviceaccount/token`, calls the API server with it, and lists every Secret in the namespace. Nothing looked wrong, because the app never used those permissions itself.
   - **You'll learn:** How pods authenticate to the Kubernetes API with an automatically mounted token, how Roles and RoleBindings grant verbs on resources, how to check what a token can actually do (`kubectl auth can-i --as`), and when to switch the token off entirely (`automountServiceAccountToken: false`).
   - **Done when:** `check.sh` uses the pod's own token and shows it can no longer read Secrets, while the app still does its real job.
@@ -238,7 +238,7 @@ Progress: **4 / 244** lines ticked.
   - **Done when:** `check.sh` gets a 403 or 404 for `/admin` from outside the allowed range, and the public routes still answer 200.
 
 ### A6 · Networking, TLS & DNS
-- [ ] **Expired TLS Cert Brings Down Frontend** · cert-manager, kind
+- [ ] **Expired TLS Cert Brings Down Frontend** · cert-manager, kind → [lab 36](36-expired-tls-cert/)
   - **What happens:** The site's certificate was installed by hand a year ago with a calendar reminder nobody kept. It expires on a Saturday; browsers show a full-page warning and API clients fail with `certificate has expired`. The service itself is healthy, so every health check stays green.
   - **You'll learn:** What a certificate's validity window is, how cert-manager issues certificates and renews them before they expire (here using a local self-signed CA), how to read a certificate's dates with `openssl s_client`, and why you monitor expiry rather than uptime.
   - **Done when:** `check.sh` shows a short-lived certificate being renewed automatically, and the endpoint keeps serving a valid certificate across the renewal.
@@ -353,7 +353,7 @@ Progress: **4 / 244** lines ticked.
 
 ### A9 · Infrastructure as code & GitOps
 *Terraform against Docker/kind locally, so nothing here costs money.*
-- [ ] **Drift in IaC Deployments** · Terraform
+- [ ] **Drift in IaC Deployments** · Terraform → [lab 37](37-iac-drift/)
   - **What happens:** During an incident, someone changes a resource by hand (opens a port, raises a limit). Terraform still believes the old configuration is live. The next `terraform apply` silently reverts the emergency fix, or the hand change lives on untracked forever.
   - **You'll learn:** What drift is, how `terraform plan` detects it by comparing state with what actually exists, how to bring a hand change back into code or revert it on purpose, and how to run drift checks on a schedule.
   - **Done when:** `check.sh` makes a manual change, a scheduled plan reports the drift, and after reconciling the plan shows no changes.
@@ -543,7 +543,7 @@ injects the failure. The interview follow-up questions in the original file make
   - **Done when:** With duplication and reordering injected, the final state matches each message being applied exactly once.
 
 ### B6 · Networking & APIs
-- [ ] **Build a Mini HTTP Server** · Python or Go, sockets
+- [ ] **Build a Mini HTTP Server** · Python or Go, sockets → [lab 38](38-mini-http-server/)
   - **What happens:** The server starts a thread per connection. Under load it runs out of threads or memory, and one malformed request (no end of headers, or a huge header) crashes it or ties up a worker forever.
   - **You'll learn:** Thread pools and connection limits, read timeouts, request size limits, and returning a clean error instead of crashing.
   - **Done when:** A load test plus a fuzzer of malformed and slow requests leaves the server up, answering valid requests, and returning 4xx errors to the bad ones.
@@ -569,7 +569,7 @@ injects the failure. The interview follow-up questions in the original file make
   - **What happens:** One node in a replicated system is killed with no warning. Clients see errors until failover, and when the node returns it may serve stale data or overwrite newer writes.
   - **You'll learn:** Failure detection, failover time, and catch-up on restart: a returning node syncs from the others before serving traffic.
   - **Done when:** The harness kills and restarts nodes at random; failover finishes within a stated time and no acknowledged write is lost or rolled back.
-- [ ] **Network Partition Simulation** · Python or Go, iptables or a fake network layer
+- [ ] **Network Partition Simulation** · Python or Go, iptables or a fake network layer → [lab 39](39-network-partition/)
   - **What happens:** The cluster splits into two groups that can't talk. The system either refuses writes on one side (unavailable) or accepts writes on both sides that conflict when the split heals.
   - **You'll learn:** The CAP trade-off in practice (during a partition, choose consistency or availability), and how to reconcile conflicting writes afterwards (last-writer-wins, version vectors, merges).
   - **Done when:** For both a consistency-first and an availability-first configuration, the harness records what each side accepted during the split and verifies the documented outcome after it heals.
@@ -595,7 +595,7 @@ injects the failure. The interview follow-up questions in the original file make
   - **What happens:** A config change is pushed while the cluster is partitioned. Some services get the new value and some keep the old one, with nothing showing that they disagree.
   - **You'll learn:** Watches (subscribing to changes), versioned config, and why stores like etcd use a leader and a majority to keep one agreed history.
   - **Done when:** After a partition during an update heals, every client converges on the latest version, and clients can report which version they run.
-- [ ] **Transaction Isolation Levels Simulation** · Postgres, Python
+- [ ] **Transaction Isolation Levels Simulation** · Postgres, Python → [lab 40](40-isolation-levels/)
   - **What happens:** Two transactions run at once. Depending on the isolation level, one sees rows appear mid-transaction (a phantom read), a booking is double-sold (write skew), or the two deadlock.
   - **You'll learn:** What READ COMMITTED, REPEATABLE READ and SERIALIZABLE each prevent in Postgres, and how to handle serialization failures and deadlocks by retrying.
   - **Done when:** A script reproduces each anomaly at the weakest level that allows it, shows it disappear at a stronger level, and retries the resulting serialization errors successfully.
@@ -615,7 +615,7 @@ injects the failure. The interview follow-up questions in the original file make
   - **What happens:** Generating 300 tokens on CPU takes 40 seconds, and the client (or a proxy in front of it) gives up at 30 seconds with a timeout, even though the server finishes the answer and throws it away.
   - **You'll learn:** How to send tokens as they are produced (server-sent events or chunked responses), why time-to-first-token and total time are different numbers worth measuring separately, and how proxy buffering can silently undo streaming.
   - **Done when:** A client with a 30-second timeout receives the first token in a few seconds and the full long answer without timing out.
-- [ ] **Batching** · Python
+- [ ] **Batching** · Python → [lab 41](41-dynamic-batching/)
   - **What happens:** The server handles one request at a time. With one user, latency is fine; with ten concurrent users, the tenth waits for the nine before it and its latency is ten times worse, while the CPU sits partly idle between requests.
   - **You'll learn:** Why running several prompts through the model together raises throughput, how dynamic batching collects requests for a few milliseconds before running them, and the trade-off between batch wait time and per-request latency.
   - **Done when:** A load test shows higher requests per second and lower tail (p95) latency at ten concurrent users than the one-at-a-time version, with both numbers recorded.
@@ -951,7 +951,7 @@ injects the failure. The interview follow-up questions in the original file make
   - **What happens:** A deadline pushes a large feature to ship on Friday. The last two big releases each caused an outage, and the on-call engineer wants a freeze.
   - **You'll learn:** Error budgets as an objective way to decide (release while the budget lasts, slow down when it is spent), feature flags that separate deploying from releasing, and smaller, more frequent releases.
   - **Done when:** The decision record states the release rule tied to the error budget, how flags and staged rollout reduce risk, and who decides when the rule is overridden.
-- [ ] **Model Speed vs Accuracy**
+- [ ] **Model Speed vs Accuracy** → [lab 42](42-speed-vs-accuracy/)
   - **What happens:** The most accurate model takes two seconds per request; users abandon after one second. A smaller model answers in 200 ms but makes noticeably more mistakes.
   - **You'll learn:** The levers: quantization, distillation, caching frequent answers, routing easy requests to a small model and hard ones to a big model, and measuring which errors actually matter to users.
   - **Done when:** The decision record sets a latency target and an accuracy floor, compares the options against both, and names the choice and what is given up.
@@ -987,8 +987,9 @@ injects the failure. The interview follow-up questions in the original file make
 ---
 
 ## Track D · Cloud `[cloud]`
-*Needs a real account, so each one costs something (often pennies within the free tier).
-We'll confirm before creating anything. Where a local version exists, it's in Tracks A–C.*
+*Real AWS scenarios. The labs built so far run free on local emulators (MinIO for S3,
+moto for the rest), making the same API calls as real AWS, and each lab says what the
+emulator can't prove. Anything that needs a real account costs money, so we'll confirm first.*
 
 ### D1 · Storage & data exposure
 - [ ] **S3 Bucket Data Leak Simulation** · AWS S3, AWS Config → [lab 30](30-s3-bucket-leak/)
@@ -1040,13 +1041,13 @@ We'll confirm before creating anything. Where a local version exists, it's in Tr
   - **What happens:** A small function app's managed identity was given `Contributor` on the whole subscription to "make it work". A bug in the app now lets an attacker use that identity to delete or reconfigure anything in the subscription.
   - **You'll learn:** How Azure role assignments combine a role, a scope (subscription, resource group, resource) and an identity, and how to find the narrowest built-in role that still covers what the app does.
   - **Done when:** the identity has one specific role on one resource, the app still works, an attempt to touch another resource is denied, and the resource group is deleted.
-- [ ] **API Gateway Key Rotation Breaks Clients** · AWS API Gateway (usage plans, API keys)
+- [ ] **API Gateway Key Rotation Breaks Clients** · AWS API Gateway (usage plans, API keys) → [lab 43](43-api-key-rotation/)
   - **What happens:** A leaked API key is "rotated" by deleting it and issuing a new one. Every client still holding the old key starts getting 403s at once, and support is flooded.
   - **You'll learn:** How to rotate with an overlap: attach the new key alongside the old one, migrate clients, watch usage of the old key fall to zero, then revoke it. Plus when an emergency revoke is worth the breakage.
   - **Done when:** both keys work during the overlap, the old key returns 403 only after its usage hit zero, and the API, usage plan and keys are deleted.
 
 ### D3 · Networking
-- [ ] **Security Group Too Permissive for Jumpbox** · AWS EC2 security groups, Systems Manager Session Manager
+- [ ] **Security Group Too Permissive for Jumpbox** · AWS EC2 security groups, Systems Manager Session Manager → [lab 44](44-permissive-security-group/)
   - **What happens:** A bastion host allows SSH (22) or RDP (3389) from `0.0.0.0/0`, and an RDS security group does the same for 5432. Within hours the logs fill with password-guessing attempts from around the world.
   - **You'll learn:** How security group rules work (stateful, allow-only), why "open to the world, protected by a password" isn't a control, and how Session Manager gives shell access with no inbound ports at all.
   - **Done when:** no security group allows inbound 22, 3389 or a database port from `0.0.0.0/0`, you can still get a shell via Session Manager, and the instance and groups are deleted.

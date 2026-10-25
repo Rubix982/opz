@@ -1,0 +1,20 @@
+# The reporter needs to read its ConfigMap from the API. It kept getting
+# "forbidden", so this was added "to get things working". It works.
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: reporter
+  namespace: shop
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: reporter-admin
+subjects:
+  - kind: ServiceAccount
+    name: reporter
+    namespace: shop
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: cluster-admin

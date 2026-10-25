@@ -1,0 +1,12 @@
+name: opz-lab36
+
+services:
+  frontend:
+    image: nginx:1.27-alpine
+    command: ["/bin/sh", "/run.sh"]
+    ports:
+      - "127.0.0.1:${HTTPS_PORT:-8436}:8443"
+    volumes:
+      - ./nginx/default.conf:/etc/nginx/conf.d/default.conf:ro
+      - ./nginx/run.sh:/run.sh:ro
+      - ./pki/live:/etc/nginx/certs:ro

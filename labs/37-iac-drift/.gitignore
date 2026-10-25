@@ -1,0 +1,8 @@
+# Terraform working files, provider cache and local state (the state lives with
+# your local emulator; real teams keep it in a remote backend, never in git)
+.terraform/
+.tf-cache/
+.check-work/
+*.tfstate
+*.tfstate.*
+infra/.terraform/

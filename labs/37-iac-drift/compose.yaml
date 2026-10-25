@@ -1,0 +1,13 @@
+name: opz-lab37
+
+services:
+  # A local stand-in for AWS (EC2, S3, ...). Same API as AWS; nothing is
+  # created on a real account and nothing costs money.
+  aws:
+    image: motoserver/moto:5.1.4
+    ports:
+      - "127.0.0.1:${AWS_PORT:-9037}:5000"
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://127.0.0.1:5000/moto-api/')"]
+      interval: 1s
+      retries: 30
