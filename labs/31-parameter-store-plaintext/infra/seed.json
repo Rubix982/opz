@@ -1,0 +1,6 @@
+{
+  "_comment": "What the DBA and the payments team handed over. FAKE values, lab only. Stands in for a person typing them into the console once; nothing should copy them anywhere else.",
+  "/orders/prod/db_host": "orders-db.internal",
+  "/orders/prod/db_password": "pg_FAKE_lab31_Zq7wN2kLx9",
+  "/orders/prod/payment_api_key": "pay_FAKE_lab31_live_5Rt8mB3vQ"
+}

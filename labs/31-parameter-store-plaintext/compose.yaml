@@ -1,0 +1,31 @@
+name: opz-lab31
+
+services:
+  # A local stand-in for AWS (Parameter Store, KMS, ...). Same API as AWS.
+  aws:
+    image: motoserver/moto:5.1.4
+    ports:
+      - "127.0.0.1:${AWS_PORT:-9031}:5000"
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://127.0.0.1:5000/moto-api/')"]
+      interval: 1s
+      retries: 30
+
+  app:
+    build: app
+    ports:
+      - "127.0.0.1:${APP_PORT:-8031}:8031"
+    environment:
+      # Talk to the local emulator. The keys are moto's dummies; on AWS the
+      # container would get credentials from its IAM role instead.
+      AWS_ENDPOINT_URL: http://aws:5000
+      AWS_REGION: us-east-1
+      AWS_DEFAULT_REGION: us-east-1
+      AWS_ACCESS_KEY_ID: testing
+      AWS_SECRET_ACCESS_KEY: testing
+    env_file:
+      - path: .env.app
+        required: false
+    depends_on:
+      aws:
+        condition: service_healthy

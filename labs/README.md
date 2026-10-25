@@ -1,14 +1,25 @@
 # opz labs
 
-Bite-sized, standalone versions of the scenarios in `../devops_scenarios.md`.
+Bite-sized, standalone versions of the scenarios in [`CHECKLIST.md`](CHECKLIST.md).
 Each lab is one folder: break → diagnose → fix → prove → retro. Nothing here
-depends on any other project.
+depends on any other project, and nothing costs money.
 
 Every lab has the same parts:
 - `README.md` — the incident, your job, hints, a 5-line retro to fill in
-- `app/` — the smallest stack that reproduces the problem
+- `app/` (or a skeleton to fill in) — the smallest stack that reproduces the problem
 - `check.sh` — passes only when the problem is truly fixed
 - `SOLUTION.md` — spoilers, read last
+
+Three kinds:
+- **Tracks A and C (most):** a broken system. Find the cause, fix it, prove it.
+- **Track B (labs 20–24):** nothing is broken yet. Build the thing from a skeleton,
+  and `check.sh` injects the failure: races, crashes, pauses, overload.
+- **Track D (labs 30–34):** cloud scenarios run against local emulators (MinIO for
+  S3, moto for SQS/SSM/EC2/Secrets Manager). Same API calls as real AWS, no
+  account. Each README says what the emulator can't prove.
+
+**Status:** `solved` = fixed, proven, retro written · `ready` = built and waiting.
+Lines on the checklist with no lab yet show as "not built yet" on the site.
 
 | # | Lab | Needs | Status |
 |---|-----|-------|--------|
@@ -31,3 +42,18 @@ Every lab has the same parts:
 | 17 | [Log Injection Attack on Centralized Logging](17-log-injection/) | Python | ready |
 | 18 | [Silent Data Loss from Wrong Volume Mount](18-volume-data-loss/) | Docker, kind, kubectl | ready |
 | 19 | [Alert Not Fired Due to Misconfigured Label](19-alert-label/) | Docker Compose, Prometheus | ready |
+| 20 | [Producer-Consumer with Bounded Buffer](20-producer-consumer/) | Python (build) | ready |
+| 21 | [Circuit Breaker Implementation](21-circuit-breaker/) | Python (build) | ready |
+| 22 | [Cache with Expiration & Eviction](22-ttl-lru-cache/) | Python (build) | ready |
+| 23 | [Leader Election in a Cluster](23-leader-election/) | Python (build) | ready |
+| 24 | [Build a Job Queue from Scratch](24-job-queue/) | Python, SQLite (build) | ready |
+| 25 | [Improper Rollback](25-improper-rollback/) | Python | ready |
+| 26 | [Environment Drift](26-environment-drift/) | Docker, Python | ready |
+| 27 | [Model Theft via API](27-model-theft/) | Python, scikit-learn | ready |
+| 28 | [Silent Job Failures](28-silent-job-failures/) | Python | ready |
+| 29 | [Protecting AI Model Artifacts](29-model-artifact-storage/) | Docker Compose, MinIO | ready |
+| 30 | [S3 Bucket Data Leak Simulation](30-s3-bucket-leak/) | Docker Compose, MinIO (local S3) | ready |
+| 31 | [Parameter Store Used Insecurely in Plain Text](31-parameter-store-plaintext/) | Docker Compose, moto (local AWS) | ready |
+| 32 | [SQS Message Flood Unprocessed, Causes Latency](32-sqs-poison-message/) | Docker, moto (local AWS) | ready |
+| 33 | [Zombie Resources Driving Up Cloud Bill](33-zombie-resources/) | Docker, moto (local AWS) | ready |
+| 34 | [Secrets Manager Rotation Fails Silently](34-secrets-rotation/) | Docker, moto (local AWS) | ready |

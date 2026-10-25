@@ -1,6 +1,6 @@
 # Project: opz — deployment & security labs
 
-_Last updated: 2026-10-11_
+_Last updated: 2026-10-25_
 
 ## Objective
 
@@ -11,5 +11,6 @@ write a short retro.
 
 ## Current Phase
 
-Track A, secrets and Kubernetes basics: 4 labs solved (4 of 244 lines on
-labs/CHECKLIST.md). Next: Kubernetes resource limits (OOMKilled) or webhook replay attacks.
+34 labs built across all four tracks (A 19, B 5, C 5, D 5), 4 solved (01–04).
+Track D runs on local emulators, not a paid account. Next: solve the built ones,
+starting with 05 (OOMKilled) or 06 (webhook replay).

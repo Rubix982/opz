@@ -1,0 +1,3 @@
+# made by setup.sh / deploy.sh; the live pointer, not a version
+models/current
+models/current.tmp

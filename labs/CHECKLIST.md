@@ -389,7 +389,7 @@ Progress: **4 / 244** lines ticked.
 injects the failure. The interview follow-up questions in the original file make a good retro.*
 
 ### B1 · Concurrency & coordination
-- [ ] **Producer-Consumer with Bounded Buffer** · Python or Go
+- [ ] **Producer-Consumer with Bounded Buffer** · Python or Go → [lab 20](20-producer-consumer/)
   - **What happens:** Producers fill a fixed-size buffer faster than consumers drain it. Then the harness swaps the order in which one thread takes two locks, and the whole program freezes with no error and no CPU use.
   - **You'll learn:** How a bounded buffer blocks producers when full and consumers when empty, and why taking locks in inconsistent orders causes deadlock (each thread holds one lock and waits forever for the other).
   - **Done when:** The harness runs fast producers and slow consumers for a fixed time with no lost or duplicated items, and the swapped-lock-order run no longer hangs.
@@ -432,7 +432,7 @@ injects the failure. The interview follow-up questions in the original file make
   - **You'll learn:** Exponential backoff (doubling the wait after each failure), why jitter (a random part of the wait) spreads retries out, and when to give up.
   - **Done when:** The harness plots request rate over time during recovery: retry spikes line up without jitter and flatten with it, and recovery time drops.
   - **Also covers:** *System Fails Due to Throttled API Limit*
-- [ ] **Circuit Breaker Implementation** · Python or Go
+- [ ] **Circuit Breaker Implementation** · Python or Go → [lab 21](21-circuit-breaker/)
   - **What happens:** A downstream service becomes slow. Every caller waits for its full timeout, threads pile up, and the calling service runs out of workers and fails too, even for requests that never needed the slow dependency.
   - **You'll learn:** The circuit breaker's three states (closed, open, half-open), how it fails fast and serves a fallback, and how it probes to see if the dependency recovered.
   - **Done when:** With the dependency made slow, the breaker opens and callers get fast fallbacks; when the dependency recovers, the breaker closes on its own.
@@ -456,7 +456,7 @@ injects the failure. The interview follow-up questions in the original file make
   - **Done when:** The harness reports the worst-case overshoot at several sync intervals, as a table or a chart.
 
 ### B3 · Caching & storage
-- [ ] **Cache with Expiration & Eviction** · Python or Go
+- [ ] **Cache with Expiration & Eviction** · Python or Go → [lab 22](22-ttl-lru-cache/)
   - **What happens:** The cache fills faster than entries expire. Memory grows without limit, or expired entries are still served because expiry is only checked lazily.
   - **You'll learn:** Eviction policies (LRU, LFU), lazy vs active expiry, and how to bound memory.
   - **Done when:** Under an overload test, memory stays under the cap, no expired entry is ever returned, and the hit rate is reported.
@@ -491,7 +491,7 @@ injects the failure. The interview follow-up questions in the original file make
   - **Done when:** The harness kills the leader mid-stream; with all-replica acknowledgements no acknowledged message is lost and order within each partition holds.
 
 ### B4 · Consensus
-- [ ] **Leader Election in a Cluster** · Python or Go
+- [ ] **Leader Election in a Cluster** · Python or Go → [lab 23](23-leader-election/)
   - **What happens:** The leader is killed and a new one must be chosen. Then the network is split, and both halves elect their own leader, so two nodes accept conflicting writes (split brain).
   - **You'll learn:** Election by heartbeats and timeouts, terms (or epochs) that let nodes reject an old leader, and why requiring a majority prevents two leaders.
   - **Done when:** Across killed leaders and partitions, the harness never observes two leaders in the same term, and a new leader appears within the timeout.
@@ -517,7 +517,7 @@ injects the failure. The interview follow-up questions in the original file make
   - **Done when:** With f lying nodes out of 3f + 1, honest nodes always agree; with 3f nodes the harness finds a run where they don't.
 
 ### B5 · Queues & messaging
-- [ ] **Build a Job Queue from Scratch** · Python or Go
+- [ ] **Build a Job Queue from Scratch** · Python or Go → [lab 24](24-job-queue/)
   - **What happens:** A worker takes a job and crashes before finishing. The job was already removed from the queue, so it is silently lost.
   - **You'll learn:** Visibility timeouts: a taken job is hidden but not deleted until the worker acknowledges it, and reappears if no acknowledgement comes. Also why jobs must be safe to run twice.
   - **Done when:** The harness kills workers mid-job, and every job still completes at least once.
@@ -656,7 +656,7 @@ injects the failure. The interview follow-up questions in the original file make
   - **You'll learn:** How ResourceQuotas and LimitRanges cap what one namespace can take, and how PriorityClasses let important workloads preempt less important ones.
   - **Done when:** The oversized job is rejected or held to its quota, and a high-priority serving pod still schedules while a large job is running.
   - **Also covers:** AI Tier 3 *Rogue Training Job*, AI Tier 2 *Resource Starvation*, AI Tier 2 *Insufficient Resource Quotas*, AI Tier 4 *Rogue Resource Usage*
-- [ ] **Protecting AI Model Artifacts** · MinIO
+- [ ] **Protecting AI Model Artifacts** · MinIO → [lab 29](29-model-artifact-storage/)
   - **What happens:** Model checkpoints sit in an object storage bucket with anonymous read enabled "for convenience". Anyone who finds the URL can download months of training work, and there is no record of who did.
   - **You'll learn:** Bucket policies and per-user credentials, encryption at rest, and access logging, so access is both limited and visible after the fact.
   - **Done when:** Anonymous download fails, an authorized user can still read, and the access log shows each download with the identity that made it.
@@ -708,7 +708,7 @@ injects the failure. The interview follow-up questions in the original file make
   - **You'll learn:** How API keys identify callers, how per-key rate limits stop one caller from starving the rest, and why both belong in front of the model rather than inside it.
   - **Done when:** Requests without a key get 401, a key over its limit gets 429, and normal callers are unaffected during an abusive burst.
   - **Also covers:** AI Tier 3 *Unauthorized API Usage*
-- [ ] **Environment Drift** · Docker, uv or pip-tools
+- [ ] **Environment Drift** · Docker, uv or pip-tools → [lab 26](26-environment-drift/)
   - **What happens:** Training works on a researcher's laptop but fails in production with an import error, because the production image installed a newer version of a library that changed its API.
   - **You'll learn:** How lockfiles pin every dependency (including indirect ones), and how building one image from that lockfile makes dev and prod identical.
   - **Done when:** The same image runs in both places, and a rebuild a week later installs exactly the same package versions.
@@ -722,7 +722,7 @@ injects the failure. The interview follow-up questions in the original file make
   - **You'll learn:** How to give each pipeline step credentials that can write only where it must, and how to check bucket exposure as part of the pipeline.
   - **Done when:** The step can write to its own private bucket only, and an attempt to write elsewhere or read the outputs anonymously fails.
   - **Also covers:** AI headline *AI Data Exfiltration Risk*
-- [ ] **Improper Rollback** · Python
+- [ ] **Improper Rollback** · Python → [lab 25](25-improper-rollback/)
   - **What happens:** A new model version is bad, so someone rolls back by copying the old files over the new ones while the service is running. Requests during the copy fail, and the logs mix both versions so the incident can't be reconstructed.
   - **You'll learn:** Why rollbacks should switch between complete, immutable versions in one step (for example a pointer or symlink swap), and why every log line should record the model version that produced it.
   - **Done when:** A rollback during a load test causes no failed requests, and the logs show exactly when each version served traffic.
@@ -779,7 +779,7 @@ injects the failure. The interview follow-up questions in the original file make
   - **What happens:** Small changes to an input that a person wouldn't notice (a few changed characters or pixels) make a small model confidently give the wrong answer.
   - **You'll learn:** How adversarial examples are generated (for example by following the model's gradient), why models are vulnerable to them, and the limits of input sanitizing and detection.
   - **Done when:** You generate inputs that fool the model, measure the attack success rate, and show how much a chosen defense reduces it.
-- [ ] **Model Theft via API** · Python
+- [ ] **Model Theft via API** · Python → [lab 27](27-model-theft/)
   - **What happens:** A competitor sends many thousands of queries to your model's API, records the answers, and trains their own copy that behaves almost the same.
   - **You'll learn:** How model extraction works, and what makes it harder: returning labels instead of full probability scores, rate limits per account, and watermarking outputs so a copy can be recognized.
   - **Done when:** You extract a copy from the unprotected API, then show the protections lower the copy's agreement with the original for the same query budget.
@@ -860,7 +860,7 @@ injects the failure. The interview follow-up questions in the original file make
   - **What happens:** Events arrive faster than the ingestion worker can process them. The backlog grows quietly, and dashboards that read from the pipeline show data that is an hour old while everyone assumes it is live.
   - **You'll learn:** Consumer lag (how far behind the reader is, measured in messages or in time), why lag in time is what users feel, and how to alert on lag that keeps growing rather than lag that is briefly high.
   - **Done when:** `check.sh` floods the pipeline, the lag alert fires as the backlog grows, and it clears once the worker catches up.
-- [ ] **Silent Job Failures** · Python
+- [ ] **Silent Job Failures** · Python → [lab 28](28-silent-job-failures/)
   - **What happens:** A nightly job exits with code 0 every night, but for a week it has written an empty file because an upstream query returned no rows. Every downstream report built on it is wrong, and the job looks green.
   - **You'll learn:** Why "the process exited cleanly" is not the same as "the output is right", and how to add output checks (row counts, schema, value ranges, freshness) that fail the job loudly when the result is implausible.
   - **Done when:** `check.sh` runs the job against an empty or corrupted input, the validation step fails it with a clear message, and a normal input still passes.
@@ -991,7 +991,7 @@ injects the failure. The interview follow-up questions in the original file make
 We'll confirm before creating anything. Where a local version exists, it's in Tracks A–C.*
 
 ### D1 · Storage & data exposure
-- [ ] **S3 Bucket Data Leak Simulation** · AWS S3, AWS Config
+- [ ] **S3 Bucket Data Leak Simulation** · AWS S3, AWS Config → [lab 30](30-s3-bucket-leak/)
   - **What happens:** Someone makes a bucket public "just for a demo" with a bucket policy that grants `s3:GetObject` to `"Principal": "*"`. Months later it holds customer exports, and anyone who guesses the bucket name can list or download them. Nothing breaks, so nobody notices.
   - **You'll learn:** How S3 access is decided (bucket policy, ACLs, and the account- and bucket-level Block Public Access settings that override both), and how an AWS Config rule turns "is anything public?" into a standing check instead of a one-off audit.
   - **Done when:** an anonymous `curl` to an object returns 403, Block Public Access is on at the account level, the Config rule reports the bucket compliant, and the bucket and rule are deleted afterwards.
@@ -1009,7 +1009,7 @@ We'll confirm before creating anything. Where a local version exists, it's in Tr
   - **You'll learn:** What encryption at rest does and doesn't protect against, the snapshot-copy-restore migration with a cutover plan, and how to stop it recurring (account-wide default EBS encryption, a Config rule for unencrypted RDS storage).
   - **Done when:** the new instance reports `StorageEncrypted: true`, the app reads its data from it, the Config rule shows compliant, and both instances, snapshots and the key are torn down.
   - **Also covers:** AI Tier 1 *Unencrypted Disk Volumes*
-- [ ] **Parameter Store Used Insecurely in Plain Text** · AWS Systems Manager Parameter Store, KMS, IAM
+- [ ] **Parameter Store Used Insecurely in Plain Text** · AWS Systems Manager Parameter Store, KMS, IAM → [lab 31](31-parameter-store-plaintext/)
   - **What happens:** Database passwords are stored as plain `String` parameters. Anyone with read-only access sees them in the console, and they turn up in CloudFormation templates and CI logs that echo parameters.
   - **You'll learn:** The difference between `String` and `SecureString` (encrypted with KMS, decrypted only when asked with `--with-decryption`), and how IAM on both the parameter path and the KMS key controls who can read the value.
   - **Done when:** the values are `SecureString`s, a role without `kms:Decrypt` gets an access error while the app's role reads them, and the parameters and key are deleted.
@@ -1079,7 +1079,7 @@ We'll confirm before creating anything. Where a local version exists, it's in Tr
   - **You'll learn:** How resource policies on SNS decide who can subscribe and publish, and how conditions like `aws:SourceAccount` or `aws:PrincipalOrgID` restrict a topic to your own accounts.
   - **Done when:** a subscribe attempt from a second (test) account is denied, existing subscriptions are audited and the unknown one removed, and the topic is deleted.
   - **Also covers:** *SNS Topic Sends Secrets to External Sub*
-- [ ] **SQS Message Flood Unprocessed, Causes Latency** · AWS SQS, dead-letter queues, CloudWatch
+- [ ] **SQS Message Flood Unprocessed, Causes Latency** · AWS SQS, dead-letter queues, CloudWatch → [lab 32](32-sqs-poison-message/)
   - **What happens:** Processing a message takes 45 seconds but the visibility timeout is 30, so messages reappear and get processed twice. A few malformed "poison" messages fail forever. The backlog and the age of the oldest message climb all day.
   - **You'll learn:** How visibility timeouts, retries and dead-letter queues (with `maxReceiveCount`) fit together, and why the age of the oldest message is a better scaling and alerting signal than queue length.
   - **Done when:** each message is processed once, poison messages land in the DLQ after a set number of tries, an alarm fires on message age, and the queues are deleted.
@@ -1113,7 +1113,7 @@ We'll confirm before creating anything. Where a local version exists, it's in Tr
   - **What happens:** A small gp2 volume runs fine for hours, then disk latency jumps and the database crawls. gp2 earns IOPS in proportion to its size and bursts on stored credits. Once the `BurstBalance` credits run out, it drops to its small baseline.
   - **You'll learn:** The gp2 credit-bucket model, how to read `BurstBalance`, and why gp3 (a fixed baseline you choose, independent of size) removes the cliff.
   - **Done when:** a benchmark shows the cliff on gp2 and steady performance after switching to gp3 in place, an alarm on low burst balance exists, and the volume and instance are deleted.
-- [ ] **Zombie Resources Driving Up Cloud Bill** · AWS Cost Explorer, Tag Editor, Terraform
+- [ ] **Zombie Resources Driving Up Cloud Bill** · AWS Cost Explorer, Tag Editor, Terraform → [lab 33](33-zombie-resources/)
   - **What happens:** The monthly bill keeps creeping up. It turns out to be unattached EBS volumes, idle load balancers, unused Elastic IPs and a NAT gateway from experiments nobody remembers starting.
   - **You'll learn:** How to find resources by cost and by missing tags, why a required-tags policy (owner, project, expiry) makes cleanup decidable, and why things created by infrastructure-as-code can be destroyed as cleanly as they were made.
   - **Done when:** a report lists every untagged resource, the planted zombies are found and deleted, and everything created for the lab is destroyed with one command.
@@ -1130,7 +1130,7 @@ We'll confirm before creating anything. Where a local version exists, it's in Tr
   - **What happens:** The pipeline has a manual approval stage, but a change still reaches production unreviewed. Either the approval sits after the deploy action, or the author approved their own change, or someone deployed through a second path that has no gate.
   - **You'll learn:** How approval actions are ordered in a stage, how IAM controls who can approve (`codepipeline:PutApprovalResult`), and why a gate only works if it's the *only* path to production.
   - **Done when:** the author's role can't approve, production can be changed only through the pipeline, a test change waits at the gate, and the pipeline and roles are deleted.
-- [ ] **Secrets Manager Rotation Fails Silently** · AWS Secrets Manager, Lambda, EventBridge
+- [ ] **Secrets Manager Rotation Fails Silently** · AWS Secrets Manager, Lambda, EventBridge → [lab 34](34-secrets-rotation/)
   - **What happens:** Automatic rotation is enabled, but the rotation Lambda can't reach the database from its subnet. Every run fails, the secret is left with a pending version that never takes over, and nobody is told.
   - **You'll learn:** The four-step rotation process (create, set, test, finish) and the version labels it moves, and how to alert on the `RotationFailed` event so a broken rotation is noticed the day it happens.
   - **Done when:** a deliberately broken rotation triggers an alert, the fixed rotation completes and the app keeps working, and the secret, function and database are deleted.

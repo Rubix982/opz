@@ -1,0 +1,44 @@
+name: opz-lab29
+
+# The team's model store. MinIO is an S3-compatible object store; teams run it
+# on-prem for checkpoints, and it enforces S3 bucket policies and IAM-style
+# user policies the way AWS does.
+services:
+  s3:
+    image: bitnamilegacy/minio:2025.7.23-debian-12-r5
+    entrypoint: ["/opt/bitnami/minio/bin/minio"]
+    command: ["server", "/data", "--address", ":9000"]
+    environment:
+      MINIO_ROOT_USER: ${MINIO_ROOT_USER}
+      MINIO_ROOT_PASSWORD: ${MINIO_ROOT_PASSWORD}
+    tmpfs:
+      - /data:mode=1777
+    ports:
+      - "127.0.0.1:${S3_PORT:-9029}:9000"
+    healthcheck:
+      test: ["CMD", "bash", "-c", "exec 3<>/dev/tcp/127.0.0.1/9000"]
+      interval: 1s
+      retries: 30
+
+  # Collects audit events if anything sends them: http://audit:8080/
+  # Events land in ./audit/audit.log, one JSON object per line.
+  audit:
+    image: python:3.12-slim
+    command: ["python", "/tools/audit_collector.py"]
+    volumes:
+      - ./tools:/tools:ro
+      - ${AUDIT_DIR:-./audit}:/audit
+
+  # Sets up the bucket from infra/init.sh each time the stack starts.
+  init:
+    image: bitnamilegacy/minio-client:2025.7.21-debian-12-r3
+    entrypoint: ["bash", "/infra/init.sh"]
+    environment:
+      MINIO_ROOT_USER: ${MINIO_ROOT_USER}
+      MINIO_ROOT_PASSWORD: ${MINIO_ROOT_PASSWORD}
+    volumes:
+      - ./infra:/infra:ro
+      - ./config:/config:ro
+    depends_on:
+      s3:
+        condition: service_healthy

@@ -1,0 +1,4 @@
+customer_id,name,email,plan,card_last4
+1001,Ayesha Khan,ayesha.khan@example.com,pro,4242
+1005,Sofia Rossi,sofia.rossi@example.com,team,3005
+1006,Omar Haddad,omar.h@example.com,pro,7719
